@@ -33,8 +33,7 @@ int main() {
         int n = read_transaction(s, transaction, &addr, &port);
         if (n < 0) continue;
 
-        char *str = (char *)transaction;
-        printf("%s\n", str);
+        printf("%s\n", (char *)transaction);
 
         uint8_t reply[12] = "pong";
         send_binding_reply(s, addr, port, reply);
