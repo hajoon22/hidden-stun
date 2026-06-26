@@ -15,12 +15,12 @@ struct stun {
 };
 
 struct stun stuns[STUNS_LENGTH] = {
-    {"23.21.150.121", 3478}, // real stun
-    {"18.191.223.12", 3478}, // real stun
-    {"85.17.88.164", 3478}, // real stun
-    {"127.0.0.1", 3478}, // fake stun
-    {"5.39.72.109", 3478}, // real stun
-    {"216.93.246.18", 3478} // real stun
+    {"23.21.150.121", 3478}, // real
+    {"18.191.223.12", 3478}, // real
+    {"85.17.88.164", 3478}, // real
+    {"127.0.0.1", 3478}, // fake
+    {"5.39.72.109", 3478}, // real
+    {"216.93.246.18", 3478} // real
 };
 
 int main() {
@@ -40,19 +40,13 @@ int main() {
 
     uint32_t addr;
     uint16_t port;
+    uint8_t reply[12];
     while (1) {
-        memset(transaction, 0, sizeof(transaction));
-        int n = read_transaction(s, transaction, &addr, &port);
+        int n = read_transaction(s, reply, &addr, &port);
         if (n < 0) continue;
 
-        // check is string
-        for (int i = 0; i < 12; i++) {
-            if (transaction[i] == '\0') {
-                char *str = (char *)transaction;
-                printf("%s\n", str);
-
-                break;
-            }
+        if (memcmp(transaction, reply, 12)) {
+            printf("%s\n", (char *)reply);
         }
     }
 }
