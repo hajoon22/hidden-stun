@@ -11,15 +11,53 @@ Hidden STUN sends Binding Requests to multiple STUN servers where most are real 
 4. Client reads the transaction field from each response.
 5. Client prints the hidden data.
 
+## How to use another project
+client:
+```c
+#include <stdio.h>
+#include <stdint.h>
+
+#include "../../hidden/hidden.h" // include hidden header for using hidden server api
+
+int main() {
+    // init hidden server structure and stuns array
+    struct hidden_server hs;
+    init_hidden_server(&hs, 3);
+
+    // add fake and real stun servers
+    add_stun(&hs, "23.21.150.121", 3478);
+    add_stun(&hs, "18.191.223.12", 3478);
+    add_stun(&hs, "127.0.0.1", 3478);
+
+    // send binding requests including data in transaction every stun servers
+    uint8_t data[12] = "ping";
+    hidden_send(&hs, data);
+
+    // read every binding replies
+    uint8_t reply[12];
+    while (1) {
+        if (hidden_read(&hs, reply) < 0) {
+            continue; // real binding reply or no data
+        }
+
+        // print reply data
+        printf("%s\n", (char *)reply);
+    }
+}
+```
+
 ## How to Test
-Build and run the fake STUN server:
+Build server and client:
 ```bash
-make server
+make example
+```
+
+Run the server:
+```bash
 ./server
 ```
 
-Build and run the client:
+Run the client:
 ```bash
-make client
 ./client
 ```
