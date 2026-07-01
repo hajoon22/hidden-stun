@@ -42,7 +42,11 @@ int main() {
 
         // print reply data
         printf("%s\n", (char *)reply);
+        break;
     }
+
+    // deinit hidden server structure
+    deinit_hidden_server(&hs); 
 }
 ```
 
